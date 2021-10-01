@@ -1,0 +1,106 @@
+
+@import url('https://fonts.googleapis.com/css2?family=Poppins&display=swap');
+$font: 'Poppins', sans-serif;
+
+* {
+    font-family: $font;
+}
+
+@mixin background-type {
+    .grass {
+        background-color: green;
+    }
+    .water {
+        background-color: blue;
+    }
+    .fire {
+        background-color: orange;
+    }
+    .electric {
+        background-color: yellow;
+    }
+    .poison {
+        background-color: purple;
+    }
+    .normal {
+        background-color: grey;
+    }
+    .bug {
+        background-color: greenyellow;
+    }
+    .ground {
+        background-color: burlywood;
+    }
+    .ghost{
+        background-color: purple;
+    }
+    .psychic {
+        background-color: deeppink;
+    }
+    .flying {
+        background-color: slategrey;
+    }
+    .fighting {
+        background-color: red;
+    }
+    .rock{
+        background-color: sandybrown;
+    }
+    .ice {
+        background-color: lightblue;
+    }
+    .dragon {
+        background-color: indianred;
+    }
+    .fairy {
+        background-color: hotpink;
+    }
+}
+
+@mixin background-type-dark {
+    .grass {
+        background-color: green;
+    }
+    .water {
+        background-color: blue;
+    }
+    .fire {
+        background-color: orange;
+    }
+    .electric {
+        background-color: yellow;
+    }
+    .poison {
+        background-color: purple;
+    }
+    .normal {
+        background-color: grey;
+    }
+    .bug {
+        background-color: brown;
+    }
+    .ground {
+        background-color: burlywood;
+    }
+    .ghost{
+        background-color: purple;
+    }
+    .psychic {
+        background-color: deeppink;
+    }
+    .fighting {
+        background-color: red;
+    }
+    .rock{
+        background-color: sandybrown;
+    }
+    .ice {
+        background-color: lightblue;
+    }
+    .dragon {
+        background-color: indianred;
+    }
+    .fairy {
+        background-color: hotpink;
+    }
+}
