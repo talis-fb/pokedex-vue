@@ -1,6 +1,9 @@
 # pokedex
 
+![screnshoot](./screnshoot.png)
+
 ## Project setup
+
 ```
 npm install
 ```
