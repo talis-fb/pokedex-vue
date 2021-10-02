@@ -1,6 +1,6 @@
 <template>
 
-    <Header></Header>
+    <Header @add_filter="add_filter" @remove_filter="remove_filter" ></Header>
     <section class="list-pokemons">
         <Pokemon 
              v-for="pk of sort_pokemons_by_id" :key="pk.id"
@@ -20,16 +20,28 @@ interface IPokemon {
 }
 
 interface PokDades{
-    pokemons: IPokemon[],
-    URL_API: string
+    pokemons_saved: IPokemon[],
+    pokemons_to_show?: string[],
+    URL_API: string,
+    sort: string,
+    filters: {
+        types: string[],
+        name: string
+    },
 }
 
 export default defineComponent({
     name: 'App',
     data: function():PokDades {
         return {
-            pokemons: [],
-            URL_API: 'https://pokeapi.co/api/v2/pokemon-form/'
+            pokemons_saved: [],
+            pokemons_to_show: [],
+            URL_API: 'https://pokeapi.co/api/v2/pokemon-form/',
+            sort: 'id',
+            filters: {
+                types: [],
+                name: ''
+            },
         }
     },
     components: { Pokemon, Header },
@@ -46,17 +58,45 @@ export default defineComponent({
             }
             return pokemon
         },  
+        add_filter(name_type:string):void {
+            this.filters.types.push(name_type)
+        },
+        remove_filter(name_type:string):void {
+            this.filters.types = this.filters.types.filter( i => i != name_type )
+        }
     },
     computed: {
-        sort_pokemons_by_id():IPokemon[] { 
+        sort_pokemons_by_id():IPokemon[]  { 
             // IMPORTANTE: Metodos computados PRECISAM ter uma tipagem de retorno para conseguir ler os dades
-            return this.pokemons.slice().sort( (a, b) => a.id - b.id )
+            let pk:IPokemon[] = this.pokemons_saved.slice()
+
+            // FILTER
+            if( this.filters.types.length ){
+                for(let i in this.pokemons_saved){
+                    const pokemon = this.pokemons_saved[i]
+                    const pk_valid = pokemon.types.every( st => this.filters.types.includes(st) )
+                    if ( !pk_valid ) 
+                        pk = pk.filter( i => i.id !== pokemon.id )
+                }
+            }
+
+            if( this.sort === 'id')
+                pk = pk.sort( (a, b) => a.id - b.id )
+
+            //if( this.sort === 'name' )
+                //pk =  this.pokemons.slice().sort( (a, b) => a.name - b.name )
+            
+            if ( this.filters.types.length ){
+                pk = pk.filter( (i:IPokemon) => i.types.some( st => this.filters.types.includes(st)  ))
+            }
+
+            return pk//this.pokemons
         }
     },
     mounted: async function(){
         for( let i=1; i<=150; i++ ){
             this.request(i.toString())
-                .then( pk => this.pokemons.push(pk))
+                .then( pk => this.pokemons_saved.push(pk))
                 .catch( err => console.log(`Erro request a pokemon: ${err}`) )
             
         }

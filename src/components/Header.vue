@@ -7,7 +7,7 @@
 
         <div class="types">
             <a v-for="(tp, ind) in types" :key="ind">
-                <img :style="style_type(ind)" :src="name_file(tp.name)" alt="">
+                <img @click="click_type(tp)" :style="style_type(ind)" :src="name_file(tp.name)" alt="">
                 <!-- <img :style="style_type(ind)" :src="name_file(tp.name)" alt=""> -->
             </a>
 
@@ -44,7 +44,11 @@ import { defineComponent } from 'vue';
 
 type StyleType = { height:string, opacity:number }
 type TypesNames = 'bug' | 'ice' | 'dark' | 'fire' | 'rock' | 'fairy' | 'ghost' | 'normal' | 'poison' | 'electric' | 'psychic' | 'grass' | 'steel' | 'water' | 'dragon' | 'flying' | 'ground' | 'fighting'
-type Types = Array<{ name:TypesNames, state:boolean, icon:string }> //{  bug: boolean, ice: boolean, dark: boolean, fire: boolean, rock: boolean, fairy: boolean, ghost: boolean, grass: boolean, stell: boolean, water: boolean, dragon: boolean, flying: boolean, ground: boolean, normal: boolean, poison: boolean, psychic: boolean, electric: boolean, fighting: boolean }
+interface IType {
+    name:TypesNames,
+    state:boolean
+}
+type Types = Array<IType> //{  bug: boolean, ice: boolean, dark: boolean, fire: boolean, rock: boolean, fairy: boolean, ghost: boolean, grass: boolean, stell: boolean, water: boolean, dragon: boolean, flying: boolean, ground: boolean, normal: boolean, poison: boolean, psychic: boolean, electric: boolean, fighting: boolean }
 interface Dades {
     types: Types
 }
@@ -54,37 +58,43 @@ export default defineComponent({
     data: function():Dades {
         return {
             types: [ 
-                {name: 'bug', state: false, icon:'https://static.wikia.nocookie.net/pokemongo_gamepedia_en/images/e/e9/Icon_Dark.png/revision/latest/scale-to-width-down/120?cb=20161106114526' },
-                {name: 'ice', state: false, icon:'https://static.wikia.nocookie.net/pokemongo_gamepedia_en/images/0/0a/Icon_Fire.png/revision/latest/scale-to-width-down/120?cb=20161106110612' },
-                {name: 'dark', state: false, icon:'../assets/Icon_dark.webp' },
-                {name: 'fire', state: false, icon:'../assets/Icon_fire.webp' },
-                {name: 'rock', state: false, icon:'../assets/Icon_rock.webp' },
-                {name: 'fairy', state: false, icon:'../assets/Icon_fairy.webp' },
-                {name: 'ghost', state: false, icon:'../assets/Icon_ghost.webp' },
-                {name: 'grass', state: false, icon:'../assets/Icon_grass.webp' },
-                {name: 'steel', state: false, icon:'../assets/Icon_stell.webp' },
-                {name: 'water', state: false, icon:'../assets/Icon_water.webp' },
-                {name: 'dragon', state: false, icon:'../assets/Icon_dragon.webp' },
-                {name: 'flying', state: false, icon:'../assets/Icon_flying.webp' },
-                {name: 'ground', state: false, icon:'../assets/Icon_ground.webp' },
-                {name: 'normal', state: false, icon:'../assets/Icon_normal.webp' },
-                {name: 'poison', state: false, icon:'../assets/Icon_poison.webp' },
-                {name: 'psychic', state: false, icon:'../assets/Icon_psychic.webp' },
-                {name: 'electric', state: false, icon:'../assets/Icon_electric.webp' },
-                {name: 'fighting', state: false, icon:'../assets/Icon_fighting.webp' }
+                {name: 'bug', state: false },
+                {name: 'ice', state: false },
+                {name: 'dark', state: false },
+                {name: 'fire', state: false },
+                {name: 'rock', state: false },
+                {name: 'fairy', state: false },
+                {name: 'ghost', state: false },
+                {name: 'grass', state: false },
+                {name: 'steel', state: false },
+                {name: 'water', state: false },
+                {name: 'dragon', state: false },
+                {name: 'flying', state: false },
+                {name: 'ground', state: false },
+                {name: 'normal', state: false },
+                {name: 'poison', state: false },
+                {name: 'psychic', state: false },
+                {name: 'electric', state: false },
+                {name: 'fighting', state: false }
             ]
         }
     },
     methods: {
         style_type(type:number):StyleType {
-            console.log(this.types[type].name)
             const height = this.types[type].state ? {height: '70%'} : {height: '45%'}
             const opacity = this.types[type].state ? {opacity: 1} : {opacity: 0.5}
             return { ...height, ...opacity }
         },
         name_file(type:string){
-            //return '../assets/Icon_'+ type + '.webp'
             return require('../assets/Icon_' + type + '.webp')
+        },
+        click_type(bixo:IType){
+            bixo.state = !bixo.state
+            if(bixo.state){
+                this.$emit('add_filter', bixo.name)
+            } else {
+                this.$emit('remove_filter', bixo.name)
+            }
         }
     }
 });
@@ -150,6 +160,7 @@ header {
         display: flex;
         align-items: center;
         img {
+            transition: 0.1s;
             height: 60%;
         }
     }
