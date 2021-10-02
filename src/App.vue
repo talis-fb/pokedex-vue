@@ -1,16 +1,17 @@
 <template>
-    <section>
 
+    <Header></Header>
+    <section class="list-pokemons">
         <Pokemon 
-            v-for="pk of sort_pokemons_by_id" :key="pk.id"
-            :id="pk.id" :name="pk.name" :types="pk.types" />
-
+             v-for="pk of sort_pokemons_by_id" :key="pk.id"
+             :id="pk.id" :name="pk.name" :types="pk.types" />
     </section>
 </template>
 
 <script lang="ts">
 import { defineComponent } from 'vue';
 import Pokemon from './components/Pokemon.vue'
+import Header from './components/Header.vue'
 
 interface IPokemon {
     id:  number,
@@ -31,7 +32,7 @@ export default defineComponent({
             URL_API: 'https://pokeapi.co/api/v2/pokemon-form/'
         }
     },
-    components: { Pokemon },
+    components: { Pokemon, Header },
     methods: {
         async request(id:string):Promise<IPokemon> {
             // request from API the dades of a pokemon
@@ -64,9 +65,15 @@ export default defineComponent({
 </script>
 
 <style lang="scss">
-section {
+
+body {
+background: url('https://assets.pokemon.com/static2/_ui/img/chrome/body_bg.png');
+}
+
+.list-pokemons {
     display: flex;
     flex-wrap: wrap;
+    justify-content: center;
     gap: 10px;
 }
 </style>
