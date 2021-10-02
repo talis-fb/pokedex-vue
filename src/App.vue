@@ -1,6 +1,6 @@
 <template>
 
-    <Header @add_filter="add_filter" @remove_filter="remove_filter" ></Header>
+    <Header @add_filter="add_filter" @remove_filter="remove_filter" @update_search="update_search" ></Header>
     <section class="list-pokemons">
         <Pokemon 
              v-for="pk of sort_pokemons_by_id" :key="pk.id"
@@ -63,6 +63,9 @@ export default defineComponent({
         },
         remove_filter(name_type:string):void {
             this.filters.types = this.filters.types.filter( i => i != name_type )
+        },
+        update_search(name_for_search:string):void {
+            this.filters.name = name_for_search
         }
     },
     computed: {
@@ -70,27 +73,22 @@ export default defineComponent({
             // IMPORTANTE: Metodos computados PRECISAM ter uma tipagem de retorno para conseguir ler os dades
             let pk:IPokemon[] = this.pokemons_saved.slice()
 
-            // FILTER
+            // FILTERS
+            if( this.filters.name )
+                pk = pk.filter( pk => pk.name.includes(this.filters.name) )
             if( this.filters.types.length ){
                 for(let i in this.pokemons_saved){
                     const pokemon = this.pokemons_saved[i]
-                    const pk_valid = pokemon.types.every( st => this.filters.types.includes(st) )
+                    const pk_valid = this.filters.types.every( st => pokemon.types.includes(st) ) 
                     if ( !pk_valid ) 
                         pk = pk.filter( i => i.id !== pokemon.id )
                 }
             }
-
+            
             if( this.sort === 'id')
                 pk = pk.sort( (a, b) => a.id - b.id )
 
-            //if( this.sort === 'name' )
-                //pk =  this.pokemons.slice().sort( (a, b) => a.name - b.name )
-            
-            if ( this.filters.types.length ){
-                pk = pk.filter( (i:IPokemon) => i.types.some( st => this.filters.types.includes(st)  ))
-            }
-
-            return pk//this.pokemons
+            return pk
         }
     },
     mounted: async function(){

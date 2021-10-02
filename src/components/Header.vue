@@ -8,32 +8,11 @@
         <div class="types">
             <a v-for="(tp, ind) in types" :key="ind">
                 <img @click="click_type(tp)" :style="style_type(ind)" :src="name_file(tp.name)" alt="">
-                <!-- <img :style="style_type(ind)" :src="name_file(tp.name)" alt=""> -->
             </a>
-
-            <!-- <a > <img :style="style_type('bug')" src="../assets/Icon_Bug.webp" alt=""> </a> -->
-            <!-- <a > <img :style="style_type('bug')" src="../assets/Icon_Ice.webp" alt=""> </a> -->
-            <!-- <a > <img :style="style_type('dark')" src="../assets/Icon_Dark.webp" alt=""> </a> -->
-            <!-- <a > <img :style="style_type('fire')" src="../assets/Icon_Fire.webp" alt=""> </a> -->
-            <!-- <a > <img :style="style_type('rock')" src="../assets/Icon_Rock.webp" alt=""> </a> -->
-            <!-- <a > <img :style="style_type('fairy')" src="../assets/Icon_Fairy.webp" alt=""> </a> -->
-            <!-- <a > <img :style="style_type('ghost')" src="../assets/Icon_Ghost.webp" alt=""> </a> -->
-            <!-- <a > <img :style="style_type('grass')" src="../assets/Icon_Grass.webp" alt=""> </a> -->
-            <!-- <a > <img :style="style_type('steel')" src="../assets/Icon_Steel.webp" alt=""> </a> -->
-            <!-- <a > <img :style="style_type('water')" src="../assets/Icon_Water.webp" alt=""> </a> -->
-            <!-- <a > <img :style="style_type('dragon')" src="../assets/Icon_Dragon.webp" alt=""> </a> -->
-            <!-- <a > <img :style="style_type('flying')" src="../assets/Icon_Flying.webp" alt=""> </a> -->
-            <!-- <a > <img :style="style_type('ground')" src="../assets/Icon_Ground.webp" alt=""> </a> -->
-            <!-- <a > <img :style="style_type('normal')" src="../assets/Icon_Normal.webp" alt=""> </a> -->
-            <!-- <a > <img :style="style_type('poison')" src="../assets/Icon_Poison.webp" alt=""> </a> -->
-            <!-- <a > <img :style="style_type('psychic')" src="../assets/Icon_Psychic.webp" alt=""> </a> -->
-            <!-- <a > <img :style="style_type('electric')" src="../assets/Icon_Electric.webp" alt=""> </a> -->
-            <!-- <a > <img :style="style_type('fighting')" src="../assets/Icon_Fighting.webp" alt=""> </a> -->
-
         </div>
 
         <div class="search">
-            <input type="search">
+            <input type="search" v-model="search" >
             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-search" viewBox="0 0 16 16"> <path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0z"/> </svg>
         </div>
     </header>
@@ -48,8 +27,9 @@ interface IType {
     name:TypesNames,
     state:boolean
 }
-type Types = Array<IType> //{  bug: boolean, ice: boolean, dark: boolean, fire: boolean, rock: boolean, fairy: boolean, ghost: boolean, grass: boolean, stell: boolean, water: boolean, dragon: boolean, flying: boolean, ground: boolean, normal: boolean, poison: boolean, psychic: boolean, electric: boolean, fighting: boolean }
+type Types = Array<IType>
 interface Dades {
+    search: string
     types: Types
 }
 
@@ -57,6 +37,7 @@ export default defineComponent({
     name: 'Header',
     data: function():Dades {
         return {
+            search: '',
             types: [ 
                 {name: 'bug', state: false },
                 {name: 'ice', state: false },
@@ -77,6 +58,11 @@ export default defineComponent({
                 {name: 'electric', state: false },
                 {name: 'fighting', state: false }
             ]
+        }
+    },
+    watch: {
+        search: function(newValue){
+            this.$emit('update_search', newValue)
         }
     },
     methods: {
