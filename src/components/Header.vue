@@ -1,12 +1,12 @@
 <template>
     <header>
         <div class="generations">
-            <button>(1)</button>
-            <button>(2)</button>
-            <button>(4)</button>
-            <button>(5)</button>
-            <button>(6)</button>
-            <button>(7)</button>
+            <button class="active">1</button>
+            <button>2</button>
+            <button>4</button>
+            <button>5</button>
+            <button>6</button>
+            <button>7</button>
         </div>
 
         <div class="types">
@@ -135,14 +135,20 @@ header {
             height: 46%;
             font-size: 17px;
             padding: 5px;
+            background-color: #f2f2f2;
+            border: 1px solid #a2a2a2;
+
+            &.active {
+                background-color: #BBE6E0; //  #836EA5;
+            }
 
             &:nth-child(1){
-                border-top-left-radius: 10px;
-                border-bottom-left-radius: 10px;
+                border-top-left-radius: 7px;
+                border-bottom-left-radius: 7px;
             }
             &:last-child{
-                border-top-right-radius: 10px;
-                border-bottom-right-radius: 10px;
+                border-top-right-radius: 7px;
+                border-bottom-right-radius: 7px;
             }
         }
     }
@@ -192,17 +198,15 @@ header {
         display: flex;
         align-items: center;
         gap: 5px;
-
-    }
-
-    a {
-        height: 100%;
-        position: relative;
-        display: flex;
-        align-items: center;
-        img {
-            transition: 0.1s;
-            height: 60%;
+        a {
+            height: 100%;
+            position: relative;
+            display: flex;
+            align-items: center;
+            img {
+                transition: 0.1s;
+                height: 60%;
+            }
         }
     }
 }

@@ -1,5 +1,4 @@
 <template>
-
     <Header @add_filter="add_filter" @remove_filter="remove_filter" @update_search="update_search" @update_sort="update_sort" ></Header>
     <section class="list-pokemons">
         <Pokemon 
@@ -33,9 +32,9 @@ export default defineComponent({
     methods: {
         async request(id:string):Promise<IPokemon> {
             // request from API the dades of a pokemon
+            type TypeRequest = { type: { name:string } }
             const res = await fetch(this.URL_API + id)
             const pokemon_received = await res.json()
-            type TypeRequest = { type: { name:string } }
             const pokemon = {
                 name: pokemon_received.name,
                 id: pokemon_received.id,
