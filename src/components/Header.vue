@@ -1,8 +1,12 @@
 <template>
     <header>
-        <div class="sort">
-            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrow-down-short" viewBox="0 0 16 16"> <path fill-rule="evenodd" d="M8 4a.5.5 0 0 1 .5.5v5.793l2.146-2.147a.5.5 0 0 1 .708.708l-3 3a.5.5 0 0 1-.708 0l-3-3a.5.5 0 1 1 .708-.708L7.5 10.293V4.5A.5.5 0 0 1 8 4z"/> </svg>
-            ID
+        <div class="generations">
+            <button>(1)</button>
+            <button>(2)</button>
+            <button>(4)</button>
+            <button>(5)</button>
+            <button>(6)</button>
+            <button>(7)</button>
         </div>
 
         <div class="types">
@@ -12,32 +16,31 @@
         </div>
 
         <div class="search">
-            <input type="search" v-model="search" >
-            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-search" viewBox="0 0 16 16"> <path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0z"/> </svg>
+            <div class="input-search">
+                <input type="search" v-model="search" />
+                <svg class="icon-search" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"  viewBox="0 0 16 16"> <path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0z"/> </svg> 
+            </div>
+
+            <div class="options-sort">
+                <button @click="change_sort('-id')" :class=" sort=='-id' ? 'active' : '' " v-html="icons.ArrowDown + 'ID' "></button>
+                <button @click="change_sort('+id')" :class=" sort=='+id' ? 'active' : '' " v-html="icons.ArrowUp + 'ID' "></button>
+                <button @click="change_sort('-name')" :class=" sort=='-name' ? 'active' : '' " v-html="icons.ArrowDown + 'NAME' "></button>
+                <button @click="change_sort('+name')" :class=" sort=='+name' ? 'active' : '' " v-html="icons.ArrowUp + 'NAME' "></button>
+            </div>
         </div>
     </header>
 </template>
 
 <script lang="ts">
 import { defineComponent } from 'vue';
-
-type StyleType = { height:string, opacity:number }
-type TypesNames = 'bug' | 'ice' | 'dark' | 'fire' | 'rock' | 'fairy' | 'ghost' | 'normal' | 'poison' | 'electric' | 'psychic' | 'grass' | 'steel' | 'water' | 'dragon' | 'flying' | 'ground' | 'fighting'
-interface IType {
-    name:TypesNames,
-    state:boolean
-}
-type Types = Array<IType>
-interface Dades {
-    search: string
-    types: Types
-}
+import { StyleType,  IType,  Dades  } from '../interfaces'
 
 export default defineComponent({
     name: 'Header',
     data: function():Dades {
         return {
             search: '',
+            sort: '-id',
             types: [ 
                 {name: 'bug', state: false },
                 {name: 'ice', state: false },
@@ -57,12 +60,19 @@ export default defineComponent({
                 {name: 'psychic', state: false },
                 {name: 'electric', state: false },
                 {name: 'fighting', state: false }
-            ]
+            ],
+            icons: {
+                ArrowUp: '<svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" fill="currentColor" class="bi bi-arrow-up" viewBox="0 0 16 16"> <path fill-rule="evenodd" d="M8 15a.5.5 0 0 0 .5-.5V2.707l3.146 3.147a.5.5 0 0 0 .708-.708l-4-4a.5.5 0 0 0-.708 0l-4 4a.5.5 0 1 0 .708.708L7.5 2.707V14.5a.5.5 0 0 0 .5.5z"/> </svg>',
+                ArrowDown: '<svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" fill="currentColor" class="bi bi-arrow-down" viewBox="0 0 16 16"> <path fill-rule="evenodd" d="M8 1a.5.5 0 0 1 .5.5v11.793l3.146-3.147a.5.5 0 0 1 .708.708l-4 4a.5.5 0 0 1-.708 0l-4-4a.5.5 0 0 1 .708-.708L7.5 13.293V1.5A.5.5 0 0 1 8 1z"/> </svg>'
+            }
         }
     },
     watch: {
         search: function(newValue){
             this.$emit('update_search', newValue)
+        },
+        sort: function(newValue){
+            this.$emit('update_sort', newValue)
         }
     },
     methods: {
@@ -81,6 +91,9 @@ export default defineComponent({
             } else {
                 this.$emit('remove_filter', bixo.name)
             }
+        },
+        change_sort(sort:'-id' | '+id' | '-name' | '+name'){
+            this.sort = sort
         }
     }
 });
@@ -93,7 +106,7 @@ header {
     margin-bottom: 10px;
     width: 95%;
     max-width:1300px;
-    height: 50px;
+    height: 70px;
 
     border-bottom-left-radius: 15px;
     border-bottom-right-radius: 15px;
@@ -106,29 +119,71 @@ header {
     top:0px;
     z-index: 9;
 
-    .sort{
-        border: 1px solid black;
-        height: 85%;
-        border-radius: 5px;
-        background-color: #edd;
-        text-align: center;
-        padding: 8px;
+    .generations{
+        height: 100%;
+        width: 20%;
+
+        display: flex;
+        flex-direction: row;
+        justify-content: center;
+        align-items: center;
+        flex-wrap: wrap;
+
+        & > button {
+            float: left;
+            width: auto;
+            height: 46%;
+            font-size: 17px;
+            padding: 5px;
+
+            &:nth-child(1){
+                border-top-left-radius: 10px;
+                border-bottom-left-radius: 10px;
+            }
+            &:last-child{
+                border-top-right-radius: 10px;
+                border-bottom-right-radius: 10px;
+            }
+        }
     }
 
     .search{
         position: relative;
-        height: 85%;
-        svg {
-            position: absolute;
-            right: 10px;
-            top: 50%;
-            transform: translateY(-50%);
+        height: 100%;
+        .input-search {
+            position: relative;
+            height: 60%;
+            .icon-search {
+                position: absolute;
+                right: 10px;
+                top: 50%;
+                transform: translateY(-50%);
+            }
+            input {
+                height: 100%;
+                width: 100%;
+                background-color: #F2F2F2;
+                border-radius: 10px;
+            }
         }
-        input {
-            width: 100%;
-            height: 100%;
-            background-color: #F2F2F2;
-            border-radius: 10px;
+        .options-sort {
+            height: 40%;
+            display: flex;
+            justify-content: space-around;
+            align-items:center;
+            button {
+                height: 80%;
+                cursor: pointer;
+                border-radius: 5px;
+                text-align: center;
+                font-size: 12px;
+                background-color: #F2F2F2;
+                transition: 0.1s;
+                &.active {
+                    background-color: #705898dd;
+                }
+            }
+            
         }
     }
 

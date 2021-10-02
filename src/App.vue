@@ -1,6 +1,6 @@
 <template>
 
-    <Header @add_filter="add_filter" @remove_filter="remove_filter" @update_search="update_search" ></Header>
+    <Header @add_filter="add_filter" @remove_filter="remove_filter" @update_search="update_search" @update_sort="update_sort" ></Header>
     <section class="list-pokemons">
         <Pokemon 
              v-for="pk of sort_pokemons_by_id" :key="pk.id"
@@ -12,23 +12,8 @@
 import { defineComponent } from 'vue';
 import Pokemon from './components/Pokemon.vue'
 import Header from './components/Header.vue'
+import { IPokemon, PokDades }from './interfaces'
 
-interface IPokemon {
-    id:  number,
-    name: string,
-    types: string[]
-}
-
-interface PokDades{
-    pokemons_saved: IPokemon[],
-    pokemons_to_show?: string[],
-    URL_API: string,
-    sort: string,
-    filters: {
-        types: string[],
-        name: string
-    },
-}
 
 export default defineComponent({
     name: 'App',
@@ -37,7 +22,7 @@ export default defineComponent({
             pokemons_saved: [],
             pokemons_to_show: [],
             URL_API: 'https://pokeapi.co/api/v2/pokemon-form/',
-            sort: 'id',
+            sort: '-id',
             filters: {
                 types: [],
                 name: ''
@@ -66,6 +51,9 @@ export default defineComponent({
         },
         update_search(name_for_search:string):void {
             this.filters.name = name_for_search
+        },
+        update_sort(name_sort:string):void {
+            this.sort = name_sort
         }
     },
     computed: {
@@ -85,8 +73,23 @@ export default defineComponent({
                 }
             }
             
-            if( this.sort === 'id')
+            // SORT
+            if( this.sort === '-id')
                 pk = pk.sort( (a, b) => a.id - b.id )
+            if( this.sort === '+id')
+                pk = pk.sort( (a, b) => a.id + b.id )
+            if( this.sort === '-name')
+                pk = pk.sort( (a, b) => { 
+                    if(a.name < b.name) return -1
+                    if(a.name > b.name) return 1
+                    return 0
+                })
+            if( this.sort === '+name')
+                pk = pk.sort( (a, b) => { 
+                    if(a.name > b.name) return -1
+                    if(a.name < b.name) return 1
+                    return 0
+                })
 
             return pk
         }
@@ -103,11 +106,9 @@ export default defineComponent({
 </script>
 
 <style lang="scss">
-
 body {
-background: url('https://assets.pokemon.com/static2/_ui/img/chrome/body_bg.png');
+    background: url('https://assets.pokemon.com/static2/_ui/img/chrome/body_bg.png');
 }
-
 .list-pokemons {
     display: flex;
     flex-wrap: wrap;
